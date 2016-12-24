@@ -19,3 +19,5 @@ Route::get('/', function () {
 Route::get('/cube', function () {
     return view('cube.index');
 });
+
+Route::post('/cube/process','CubeController@process');

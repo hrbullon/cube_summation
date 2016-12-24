@@ -8,11 +8,11 @@
 		<link rel="stylesheet" href="mdi/material.min.css">
 		<!-- El archivo JS de Material Design -->
 		<script src="mdi/material.min.js"></script>
+		<script src="libs/jquery-3.1.1.min.js"></script>
+		<script src="js/app.js"></script>
+
 		<!-- Un tipo de Fuente desde Google Fonts -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-		
-		
-        
     </head>
     <body>
 		<style>
@@ -22,6 +22,7 @@
 			}
 		</style>
 		<div class="container">
+			<div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate hidden"></div>
 			<!-- Simple header with fixed tabs. -->
 			<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
 						mdl-layout--fixed-tabs">
@@ -47,18 +48,30 @@
 						</div>
 					  </div>
 				</div>
+				 <form action="cube/process" method="post" name="formCube">
 				<div class="mdl-grid mdl-cell--4-offset">
 				  <div class="mdl-cell mdl-cell--6-col ">
 					<div class="mdl-textfield mdl-js-textfield">
-						<textarea class="mdl-textfield__input" type="text" rows= "10" id="sample5" ></textarea>
+						{{ csrf_field() }}
+						<textarea class="mdl-textfield__input" type="text" rows= "10" name="data" id="sample5" ></textarea>
 						<label class="mdl-textfield__label" for="sample5">Ingrese aqui la data!</label>
 					</div>	
 				  </div>
 				  <div class="mdl-cell mdl-cell--12-col">
-					<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+					<button  class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
 					  Procesar
 					</button>
-				  </div>	
+				  </div>
+				  
+				  
+				  <button id="demo-show-toast" class="mdl-button mdl-js-button mdl-button--raised" type="button">Show Toast</button>
+<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+  <div class="mdl-snackbar__text"></div>
+  <button class="mdl-snackbar__action" type="button"></button>
+</div>
+				  
+				  
+				  </form>	
 				</div>
 			  </main>
 			  <footer class="mdl-mini-footer">
@@ -73,3 +86,17 @@
 		</div>
     </body>
 </html>
+<script>
+(function() {
+  'use strict';
+  window['counter'] = 0;
+  var snackbarContainer = document.querySelector('#demo-toast-example');
+  var showToastButton = document.querySelector('#demo-show-toast');
+  showToastButton.addEventListener('click', function() {
+    'use strict';
+    var data = {message: 'Example Message # ' + ++counter};
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+  });
+}());
+</script>
+
