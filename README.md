@@ -1,27 +1,89 @@
-## Laravel PHP Framework
+## Cube Summation
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+This a test, You are given a 3-D Matrix in which each block contains 0 initially. The first block is defined by the coordinate (1,1,1) and the last block is defined by the coordinate (N,N,N). There are two types of queries.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+#####UPDATE x y z W
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+updates the value of block (x,y,z) to W.
 
-## Official Documentation
+#####QUERY x1 y1 z1 x2 y2 z2
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+calculates the sum of the value of blocks whose x coordinate is between x1 and x2 (inclusive), y coordinate between y1 and y2 (inclusive) and z coordinate between z1 and z2 (inclusive).
 
-## Contributing
+#####Input Format
+The first line contains an integer T, the number of test-cases. T testcases follow.
+For each test case, the first line will contain two integers N and M separated by a single space.
+N defines the N * N * N matrix.
+M defines the number of operations.
+The next M lines will contain either
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+##### 1. UPDATE x y z W
+##### 2. QUERY  x1 y1 z1 x2 y2 z2
 
-## Security Vulnerabilities
+#####Output Format
+Print the result for each QUERY.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+#####Constrains
+1 <= T <= 50<br>
+1 <= N <= 100<br>
+1 <= M <= 1000<br>
+1 <= x1 <= x2 <= N<br>
+1 <= y1 <= y2 <= N <br>
+1 <= z1 <= z2 <= N <br>
+1 <= x,y,z <= N <br>
+-109 <= W <= 109<br>
 
-### License
+#####Sample Input
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+2<br>
+4 5<br>
+UPDATE 2 2 2 4<br>
+QUERY 1 1 1 3 3 3<br>
+UPDATE 1 1 1 23<br>
+QUERY 2 2 2 4 4 4<br>
+QUERY 1 1 1 3 3 3<br>
+2 4<br>
+UPDATE 2 2 2 1<br>
+QUERY 1 1 1 1 1 1<br>
+QUERY 1 1 1 2 2 2<br>
+QUERY 2 2 2 2 2 2<br>
+
+#####Sample Output
+4<br>
+4<br>
+27<br>
+0<br>
+1<br>
+1<br>
+
+#####Explanation
+First test case, we are given a cube of 4 * 4 * 4 and 5 queries. Initially all the cells (1,1,1) to (4,4,4) are 0.
+UPDATE 2 2 2 4 makes the cell (2,2,2) = 4
+QUERY 1 1 1 3 3 3. As (2,2,2) is updated to 4 and the rest are all 0. The answer to this query is 4.
+UPDATE 1 1 1 23. updates the cell (1,1,1) to 23. QUERY 2 2 2 4 4 4. Only the cell (1,1,1) and (2,2,2) are non-zero and (1,1,1) is not between (2,2,2) and (4,4,4). So, the answer is 4.
+QUERY 1 1 1 3 3 3. 2 cells are non-zero and their sum is 23+4 = 27.
+
+
+## Tecnologies
+Laravel Framework 5.1<br>
+jQuery<br>
+Material Disign<br>
+
+## Installation
+
+- git clone https://github.com/hrbullon/cube_summation.git in your server directory<br>
+- cd cube_sumation<br>
+- composer install<br>
+- php artisan key:generate<br>
+- http//yourserver/cube_summation/public
+
+## Requirements
+
+- PHP >= 5.6.4 <br>
+- OpenSSL PHP Extension <br>
+- PDO PHP Extension <br>
+- Mbstring PHP Extension <br>
+- Tokenizer PHP Extension <br>
+- XML PHP Extension <br>
+- <a href="https://getcomposer.org/">Composer</a>
+- <a href="https://git-scm.com/downloads">Git</a>
