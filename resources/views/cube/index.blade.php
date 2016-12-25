@@ -9,6 +9,7 @@
 		<!-- El archivo JS de Material Design -->
 		<script src="mdi/material.min.js"></script>
 		<script src="libs/jquery-3.1.1.min.js"></script>
+		<script src="libs/jquery-ui.js"></script>
 		<script src="js/app.js"></script>
 
 		<!-- Un tipo de Fuente desde Google Fonts -->
@@ -20,6 +21,7 @@
 				background: rgba(0, 255, 243, 0.05);
 				padding: 20px;
 			}
+			
 		</style>
 		<div class="container">
 			<div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate hidden"></div>
@@ -34,7 +36,7 @@
 			  </header>
 			  <main class="mdl-layout__content">
 				<div class="mdl-grid mdl-cell--4-offset">
-					<div class="mdl-cell mdl-cell--5-col ">
+					<div class="mdl-cell mdl-cell--5-col">
 						<div id="info">
 							<strong>Restricciones</strong><br>
 							1 <= t <= 50<br> 
@@ -46,7 +48,7 @@
 							1 <= x, y, z <= N <br>
 							-10 9 <= W <= 10 9 <br>
 						</div>
-					  </div>
+					</div>
 				</div>
 				 <form action="cube/process" method="post" name="formCube">
 				<div class="mdl-grid mdl-cell--4-offset">
@@ -62,15 +64,6 @@
 					  Procesar
 					</button>
 				  </div>
-				  
-				  
-				  <button id="demo-show-toast" class="mdl-button mdl-js-button mdl-button--raised" type="button">Show Toast</button>
-<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-  <div class="mdl-snackbar__text"></div>
-  <button class="mdl-snackbar__action" type="button"></button>
-</div>
-				  
-				  
 				  </form>	
 				</div>
 			  </main>
@@ -86,17 +79,4 @@
 		</div>
     </body>
 </html>
-<script>
-(function() {
-  'use strict';
-  window['counter'] = 0;
-  var snackbarContainer = document.querySelector('#demo-toast-example');
-  var showToastButton = document.querySelector('#demo-show-toast');
-  showToastButton.addEventListener('click', function() {
-    'use strict';
-    var data = {message: 'Example Message # ' + ++counter};
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
-  });
-}());
-</script>
 

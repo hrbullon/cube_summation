@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -23,6 +24,8 @@ class CubeController extends Controller
 	private $arrnm = []; //Arreglo para guardar los datos n y m
 	private $matriz = [];
 	private $start = 2; //Indica en que posición empezará a recorrer el array con las operaciones.
+	private $results = []; //Almacena los resultados
+	private $errors = []; //Almacena los errors
 	
     /**
      * Show the form for creating a new resource.
@@ -44,12 +47,26 @@ class CubeController extends Controller
 		//para facilitar el parseo de la data
 		unset($exp[0]);
 		
+		
 		$this->data = $exp;
-		
-		echo 'Input data<br>';
-		echo '<pre>'.$request['data'].'</pre>';
-		
 		$this->validateText();
+		
+		if(!$this->flag)
+		{
+			return response()->json(['errors' => $this->errors],422);
+		//Entonces debo construir la matriz y realizar los queries
+		}else{
+
+			for($x = 0; $x < $this->t; $x++)
+			{
+				//Creo la matríz número x
+				$this->getMatriz($x);
+				$this->execOperation($x);
+			}		
+			return response()->json(["results" => $this->results],200);
+			
+		}
+		
 		
 	}
 	
@@ -65,32 +82,12 @@ class CubeController extends Controller
 	
 	private function validateText()
 	{
-	
-		
 		for($x = 1; $x <= count($this->data); $x++)
 		{
 			
 			$this->queryValidate($this->data[$x]);
 			
 		}
-		
-		if(!$this->flag)
-		{
-			echo $this->msg;
-		//Entonces debo construir la matriz y realizar los queries
-		}else{
-			
-			echo 'Output data<br>';
-
-			for($x = 0; $x < $this->t; $x++)
-			{
-				//Creo la matríz número x
-				$this->getMatriz($x);
-				$this->execOperation($x);
-			}
-			
-		}
-		
 	} 
 	
 	private function queryValidate($query)
@@ -108,7 +105,8 @@ class CubeController extends Controller
 				$this->countT++;
 			}else{
 				$this->flag = false;
-				$this->msg .= ' The number of test-cases can\'t be > "T": ' . $this->t . ' becareful with blank spaces<br>';	
+				$msg = 'El número de casos no puede ser > "T": ' . $this->t . ' tenga cuidado con los espacios en blanco';	
+				array_push($this->errors,$msg);
 			}
 		//Si se trata de un query normal, verifica el formato del mismo
 		}else{
@@ -118,8 +116,8 @@ class CubeController extends Controller
 			if($this->countO > $this->getM())
 			{
 				$this->flag = false;
-				$this->msg .= 'Número de operaciones excedida, el límite es:'.$this->getM().' en el bloque:'.$this->bloque.'<br>';	
-
+				$msg = 'Número de operaciones excedida, el límite es:'.$this->getM().' en el bloque:'.$this->bloque;	
+				array_push($this->errors,$msg);
 			}
 			
 			$this->countO++;
@@ -130,7 +128,8 @@ class CubeController extends Controller
 				if(count($cadena) > 5)
 				{
 					$this->flag = false;
-					$this->msg .= 'Tiene algunos espacios en blanco demás en:<pre>'.$query.'</pre>';	
+					$msg = 'Tiene algunos espacios en blanco demás en:'.$query;	
+					array_push($this->errors,$msg);
 				}else{
 					$this->validateBlock($cadena,1);
 				}
@@ -142,14 +141,16 @@ class CubeController extends Controller
 					if(count($cadena) > 7)
 					{
 						$this->flag = false;
-						$this->msg .= 'Tiene algunos espacios en blanco demás en:<pre>'.$query.'</pre>';	
+						$msg = 'Tiene algunos espacios en blanco demás en:'.$query;
+						array_push($this->errors,$msg);
 					}else{
 						$this->validateBlock($cadena,2);
 					}
 					
 				}else{
 					$this->flag = false;
-					$this->msg .= 'Invalid word in operation: '. $cadena[0].'<br>';
+					$msg = 'Palabra inválida en la operación: '. $cadena[0];
+					array_push($this->errors,$msg);
 				}	
 			}
 			
@@ -177,7 +178,8 @@ class CubeController extends Controller
 				
 			}else{
 				$this->flag = false;
-				$this->msg .= 'Este bloque debería tener 4 elementos: '. implode(' ',$block);
+				$msg = 'Este bloque debería tener 4 elementos: '. implode(' ',$block);
+				array_push($this->errors,$msg);
 			}
 		//QUERY	
 		}else{
@@ -196,39 +198,42 @@ class CubeController extends Controller
 				if( $x1 < 1 || $x1 > $x2 || $x2 > $this->getN())
 				{
 					$this->flag = false;
-					$this->msg .= 'Se está violando la siguiente restricción: 1 <= x1 <= x2 <= N <br>';
+					$msg = 'Se está violando la siguiente restricción: 1 <= x1 <= x2 <= N';
+					array_push($this->errors,$msg);
 				}
 				//Se cumple esta condicion: 1 <= y1 <= y2 <= N 
 				if( $y1 < 1 || $y1 > $y2 || $y2 > $this->getN())
 				{
 					$this->flag = false;
-					$this->msg .= 'Se está violando la siguiente restricción: 1 <= y1 <= y2 <= N <br>';
-				
+					$msg = 'Se está violando la siguiente restricción: 1 <= y1 <= y2 <= N';
+					array_push($this->errors,$msg);
 				}
 				//Se cumple esta condicion: 1 <= z1 <= z2 <= N 
 				if( $z1 < 1 || $z1 > $z2 || trim($z2) > $this->getN())
 				{
 					$this->flag = false;
-					$this->msg .= 'Se está violando la siguiente restricción: 1 <= z1 <= z2 <= N <br>';
-
+					$msg = 'Se está violando la siguiente restricción: 1 <= z1 <= z2 <= N';
+					array_push($this->errors,$msg);
 				}
 				
 				if( $x1 !== $y1 && $y1 !== $z1)
 				{
 					$this->flag = false;
-					$this->msg .= 'x1,y1,z1 no pueden ser diferentes '.implode(' ',$block).'<br>';
-				
+					$msg = 'x1,y1,z1 no pueden ser diferentes '.implode(' ',$block);
+					array_push($this->errors,$msg);
 				}
 				
 				if( $x2 !== $y2 && $y2 !== $z2)
 				{
 					$this->flag = false;
-					$this->msg .= 'x2,y2,z2 no pueden ser diferentes '.implode(' ',$block).'<br>';
+					$msg = 'x2,y2,z2 no pueden ser diferentes '.implode(' ',$block);
+					array_push($this->errors,$msg);
 				}
 		
 			}else{
 				$this->flag = false;
-				$this->msg .= 'Este bloque debería tener 6 elementos: '. implode(' ',$block);
+				$msg = 'Este bloque debería tener 6 elementos: '. implode(' ',$block);
+				array_push($this->errors,$msg);
 			}
 		}
 	}
@@ -275,7 +280,7 @@ class CubeController extends Controller
 				{
 					$acum = $acum + $this->matriz[$i-1][0];
 				}
-				echo $acum ."<br>";
+				array_push($this->results,$acum);
 			}
 		}
 		
