@@ -51,6 +51,7 @@ class CubeController extends Controller
         unset($exp[0]);
 
         $this->data = $exp;
+
         $this->validateText();
 
         if (!$this->flag) {
@@ -86,6 +87,14 @@ class CubeController extends Controller
      */
     private function validateText()
     {
+        if(!count($this->data) > 0 )
+        {
+            $this->flag = false;
+            $msg = 'Formato de data inválido!';
+            array_push($this->errors, $msg);
+        }
+
+
         for ($x = 1; $x <= count($this->data); $x++) {
             $this->queryValidate($this->data[$x]);
         }

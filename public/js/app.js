@@ -2,6 +2,14 @@ $(document).ready(function () {
 
     //Capturar el evento submit en el formualrio
     $("[name='formCube']").submit(function () {
+
+        if($("[name='data']").val() == "")
+        {
+            alert("Data es requerido!");
+            return false;
+        }
+
+
         //Realizo una petición al servidor para procesar la data
         $.ajax({
             type: 'POST',
