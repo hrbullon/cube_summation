@@ -12,12 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/cube');
 });
 
 
-Route::get('/cube', function () {
-    return view('cube.index');
-});
-
+Route::get('/cube','CubeController@index');
 Route::post('/cube/process','CubeController@process');
