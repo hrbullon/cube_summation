@@ -276,6 +276,15 @@ class CubeController extends Controller
 
             }
 
+            if ($x1 > $this->getN() || $y1 > $this->getN()|| $z1 >$this->getN())
+            {
+
+                $this->flag = false;
+                $msg = 'x1,y1,z1 no pueden mayor que: ' . $this->getN();
+                array_push($this->errors, $msg);
+
+            }
+
         //QUERY
         } else {
 
