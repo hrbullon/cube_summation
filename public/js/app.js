@@ -27,7 +27,7 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 //El codigo 422 es devuelvto cunado se encuentra errores en la data de la petición.
-                if (xhr.status == 422) {
+                if (xhr.status == 400) {
                     showResults(xhr.responseJSON, 0);
                 }
             }

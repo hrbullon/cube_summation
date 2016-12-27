@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Mockery\CountValidator\Exception;
 
 class CubeController extends Controller
 {
@@ -74,11 +75,22 @@ class CubeController extends Controller
 
         $this->data = $exp;
 
+        if ($this->t == "" || strpos($this->t, ' '))
+        {
+
+            $this->flag = false;
+            $msg = 'El valor de "T" no fue enviado!';
+            array_push($this->errors, $msg);
+
+            return response()->json(['errors' => $this->errors], 400);
+
+        }
+
         $this->validateText();
 
         if (!$this->flag)
         {
-            return response()->json(['errors' => $this->errors], 422);
+            return response()->json(['errors' => $this->errors], 400);
         //Entonces debo construir la matriz y realizar los queries
         } else {
 
@@ -103,7 +115,6 @@ class CubeController extends Controller
      */
     private function setNM($text)
     {
-
         //Obtengo la posición del espacio en blanco según el formato establecido
         $post = strpos($text, ' ');
         //Guardo los valores de n y m
@@ -117,16 +128,6 @@ class CubeController extends Controller
      */
     private function validateText()
     {
-
-        if (!count($this->data) > 0)
-        {
-
-            $this->flag = false;
-            $msg = 'Formato de data inválido!';
-            array_push($this->errors, $msg);
-
-        }
-
 
         for ($x = 1; $x <= count($this->data); $x++)
         {
@@ -172,8 +173,8 @@ class CubeController extends Controller
 
             //Guardo un error si el contador de operaciones es > m
             if ($this->countO > $this->getM())
-            {
 
+            {
                 $this->flag = false;
                 $msg = 'Número de operaciones excedida, el límite es:' . $this->getM() . ' en el bloque:' . $this->bloque;
                 array_push($this->errors, $msg);
@@ -253,14 +254,24 @@ class CubeController extends Controller
         //UPDATE
         if ($type == 1)
         {
+            $x1 = $block[1];
+            $y1 = $block[2];
+            $z1 = $block[3];
 
-            if (count($block) == 4)
+            if ( count($block) !== 4)
             {
-
-            } else {
 
                 $this->flag = false;
                 $msg = 'Este bloque debería tener 4 elementos: ' . implode(' ', $block);
+                array_push($this->errors, $msg);
+
+            }
+
+            if ($x1 !== $y1 || $x1 !== $z1)
+            {
+
+                $this->flag = false;
+                $msg = 'x1,y1,z1 no pueden ser diferentes ' . implode(' ', $block);
                 array_push($this->errors, $msg);
 
             }
@@ -327,6 +338,24 @@ class CubeController extends Controller
 
                 }
 
+                if ($x1 !== $y1 && $x1 !== $z1)
+                {
+
+                    $this->flag = false;
+                    $msg = 'x1,y1,z1 no pueden ser diferentes ' . implode(' ', $block);
+                    array_push($this->errors, $msg);
+
+                }
+
+                if ($x2 !== $y2 && $x2 !== trim($z2))
+                {
+
+                    $this->flag = false;
+                    $msg = 'x2,y2,z2 no pueden ser diferentes ' . implode(' ', $block);
+                    array_push($this->errors, $msg);
+
+                }
+
             } else {
 
                 $this->flag = false;
@@ -345,7 +374,10 @@ class CubeController extends Controller
     */
     private function getN()
     {
-        return $this->arrnm[count($this->arrnm) - 1][0];
+        if(count($this->arrnm) > 0)
+        {
+            return $this->arrnm[count($this->arrnm) - 1][0];
+        }
     }
 
     /*
@@ -354,7 +386,10 @@ class CubeController extends Controller
     */
     private function getM()
     {
-        return $this->arrnm[count($this->arrnm) - 1][1];
+        if(count($this->arrnm) > 0)
+        {
+            return $this->arrnm[count($this->arrnm) - 1][1];
+        }
     }
 
     /*
